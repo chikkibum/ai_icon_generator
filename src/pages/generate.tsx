@@ -2,12 +2,10 @@ import React from "react";
 import type { NextPage } from "next";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import MaxWidthWrapper from "@/components/maxWidthWrapper";
+import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { api } from "@/utils/api";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import ChatComponent from "@/components/Char";
-import ChatApp from "@/components/Char";
 const Generate: NextPage = () => {
   const [form, setForm] = useState({
     prompt: "",
@@ -45,9 +43,6 @@ const Generate: NextPage = () => {
   return (
     <MaxWidthWrapper>
       <div className="flex h-screen flex-col items-center justify-center gap-4">
-        {/* <ChatComponent prompt={form.prompt} />
-         */}
-        <ChatApp />
         {!isloggedIn ? (
           <Button
             onClick={() => {

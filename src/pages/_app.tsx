@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import { Toaster } from "@/components/ui/sonner";
 import { api } from "@/utils/api";
 import { NavbarDemo } from "@/components/NavbarMenu";
+import { Footer } from "@/components/Footer";
 
 import "@/styles/globals.css";
 
@@ -16,6 +17,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <NavbarDemo />
       <Toaster richColors position="top-right" closeButton />
       <Component {...pageProps} />
+      <Footer />
     </SessionProvider>
   );
 };

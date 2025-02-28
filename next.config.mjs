@@ -21,7 +21,7 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    domains: [""],
+    domains: ["assets.aceternity.com"],
   },
 };
 export default config;
