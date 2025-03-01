@@ -15,7 +15,16 @@ const Generate: NextPage = () => {
     numberOfIcons: "1",
   });
 
-  const generateIcon = api.generate.generateIcon.useMutation();
+  const [imagesUrl, setImagesUrl] = useState<{ imageUrl: string }[]>([]);
+
+  const generateIcon = api.generate.generateIcon.useMutation({
+    onSuccess(data) {
+      setImagesUrl(data);
+    },
+    onError(error) {
+      setError(error.message);
+    },
+  });
 
   const session = useSession();
   const isloggedIn = !!session.data?.user;
@@ -29,6 +38,13 @@ const Generate: NextPage = () => {
       prompt: form.prompt,
       // ...form,
       // numberOfIcons: parseInt(form.numberOfIcons),
+    });
+    setForm({
+      prompt: "",
+      color: "",
+      shape: "",
+      style: "",
+      numberOfIcons: "1",
     });
   }
 

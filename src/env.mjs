@@ -24,6 +24,8 @@ const server = z.object({
 
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
+  MOCK_DALLE: z.string(),
+  DALLE_API_KEY: z.string(),
 });
 
 /**
@@ -47,9 +49,11 @@ const processEnv = {
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   // DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
   // DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
-
+  DALLE_API_KEY: process.env.DALLE_API_KEY,
+  MOCK_DALLE: process.env.MOCK_DALLE,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 
