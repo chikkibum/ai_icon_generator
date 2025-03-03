@@ -6,7 +6,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Github, LinkedIn, Twitter, YouTube } from "@/lib/icons";
 import MaxWidthWrapper from "./MaxWidthWrapper";
+import { Prata } from "next/font/google";
 
+const prata = Prata({
+  subsets: ["latin"],
+  weight: "400", // Only one weight available for Prata
+});
 // Hardcoded data for socials and navigation
 const socials = [
   {
@@ -84,6 +89,26 @@ export function Footer({ className }: { className?: string }) {
                   {process.env.NEXT_PUBLIC_APP_NAME} Logo
                 </span>
                 {/* logo */}
+                <svg
+                  width="150"
+                  height="100"
+                  viewBox="0 0 "
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  {/* <rect width="100%" height="100%" /> */}
+                  <text
+                    x="50%"
+                    y="50%"
+                    font-size="34"
+                    fill="black"
+                    font-family={prata.style.fontFamily}
+                    font-weight="bold"
+                    text-anchor="middle"
+                    alignment-baseline="middle"
+                  >
+                    AI-Icons
+                  </text>
+                </svg>
               </Link>
             </div>
             <div className="flex items-center gap-3">

@@ -6,6 +6,7 @@ import { api } from "@/utils/api";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { toast } from "sonner";
 
 const Generate: NextPage = () => {
   const [form, setForm] = useState({
@@ -19,7 +20,7 @@ const Generate: NextPage = () => {
   const generateIcon = api.generate.generateIcon.useMutation({
     onSuccess(data) {
       if (data.result?.imageBase64) {
-        setImagesUrl(data.result.imageBase64); // Store the Base64 image
+        setImagesUrl(data.result.imageBase64);
       }
       setIsLoading(false);
     },
@@ -36,7 +37,13 @@ const Generate: NextPage = () => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-    generateIcon.mutate({ prompt: form.prompt });
+
+    toast.promise(generateIcon.mutateAsync({ prompt: form.prompt }), {
+      loading: "Generating icon...",
+      success: "Icon generated successfully! 🎉",
+      error: "Failed to generate icon ❌",
+    });
+
     setForm({ prompt: "" });
   }
 
@@ -50,7 +57,9 @@ const Generate: NextPage = () => {
         <h1 className="text-3xl font-bold">AI Icon Generator</h1>
 
         {!isloggedIn ? (
-          <Button onClick={() => signIn().catch(console.error)}>Sign In</Button>
+          <Button onClick={() => void signIn().catch(console.error)}>
+            Sign In
+          </Button>
         ) : (
           <div className="flex w-full max-w-md flex-col items-center gap-6">
             <div className="flex w-full justify-between">
@@ -60,7 +69,7 @@ const Generate: NextPage = () => {
               </p>
               <Button
                 variant="outline"
-                onClick={() => signOut().catch(console.error)}
+                onClick={() => void signOut().catch(console.error)}
               >
                 Sign Out
               </Button>
