@@ -26,6 +26,11 @@ const server = z.object({
   GOOGLE_CLIENT_SECRET: z.string(),
   MOCK_DALLE: z.string(),
   DALLE_API_KEY: z.string(),
+  AWS_SECRET_KEY: z.string(),
+  AWS_ACCESS_KEY: z.string(),
+  CLOUDFLARE_ACCOUNT_ID: z.string(),
+  CLOUDFLARE_API_TOKEN: z.string(),
+  S3_BUCKET_NAME: z.string(),
 });
 
 /**
@@ -53,6 +58,11 @@ const processEnv = {
   MOCK_DALLE: process.env.MOCK_DALLE,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+  AWS_SECRET_KEY: process.env.AWS_SECRET_KEY,
+  AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
+  CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID,
+  CLOUDFLARE_API_TOKEN: process.env.CLOUDFLARE_API_TOKEN,
+  S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
 
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };

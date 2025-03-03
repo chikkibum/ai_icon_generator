@@ -1,6 +1,6 @@
 "use client";
 
-import { cn, fetcher } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";

@@ -2,28 +2,39 @@ import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import OpenAI from "openai";
 import { env } from "@/env.mjs";
-import { b64Image } from "@/data/b64Image";
+import { S3 } from "@aws-sdk/client-s3";
 
-const openai = new OpenAI({
-  apiKey: env.DALLE_API_KEY,
+const s3 = new S3({
+  region: "ap-south-1",
+  credentials: {
+    accessKeyId: env.AWS_ACCESS_KEY,
+    secretAccessKey: env.AWS_SECRET_KEY,
+  },
 });
 
 async function generateIcon(prompt: string, numberOfIcons = 1) {
-  if (env.MOCK_DALLE === "true") {
-    return new Array<string>(numberOfIcons).fill(b64Image);
-  } else {
-    const response = await openai.images.generate({
-      model: "dall-e-3",
-      prompt: "a white siamese cat",
-      n: 1,
-      size: "1024x1024",
-      response_format: "b64_json",
-    });
+  const response = await fetch(
+    `https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/ai/run/@cf/bytedance/stable-diffusion-xl-lightning`,
+    {
+      headers: {
+        Authorization: `Bearer ${env.CLOUDFLARE_API_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({ prompt }),
+    }
+  );
 
-    return response.data.map((result) => result.b64_json || "");
+  if (!response.ok) {
+    throw new Error(`Cloudflare AI request failed: ${response.statusText}`);
   }
+
+  // Convert response to binary data (image)
+  const arrayBuffer = await response.arrayBuffer();
+  const base64Image = Buffer.from(arrayBuffer).toString("base64");
+
+  return `data:image/jpeg;base64,${base64Image}`;
 }
 
 export const generateRouter = createTRPCRouter({
@@ -35,15 +46,10 @@ export const generateRouter = createTRPCRouter({
       const { count } = await ctx.prisma.user.updateMany({
         where: {
           id: ctx.session?.user.id,
-
-          credits: {
-            gte: 1,
-          },
+          credits: { gte: 1 },
         },
         data: {
-          credits: {
-            decrement: 1,
-          },
+          credits: { decrement: 1 },
         },
       });
 
@@ -53,11 +59,19 @@ export const generateRouter = createTRPCRouter({
           message: "Not enough credits",
         });
       }
+
+      const base64Image = await generateIcon(input.prompt);
+
+      await s3.putObject({
+        Bucket: env.S3_BUCKET_NAME,
+        Key: `icons/${ctx.session?.user.id}/${Date.now()}.jpeg`,
+        Body: Buffer.from(base64Image, "base64"),
+        ContentType: "image/jpeg",
+      });
+
       return {
         message: "success",
-        result: {
-          prompt: input.prompt,
-        },
+        result: { imageBase64: base64Image },
       };
     }),
 });
